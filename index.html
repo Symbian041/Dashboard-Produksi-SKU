@@ -390,12 +390,34 @@
         let SPREADSHEET_DIRECT_URL = localStorage.getItem('SKU_SPREADSHEET_URL') || "https://docs.google.com/spreadsheets/d/1_x1VVyr5b_PijzMCTsbalWLMOeNeJyPl2VIiYdhry5A/edit";
         let GOOGLE_SCRIPT_URL = localStorage.getItem('SKU_SCRIPT_URL') || "";
 
+        // Sample Dataset persis dari revisi Google Sheet Oktober 2026
         let sampleDataset = [
-            { tanggal: '09/09/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 0, wpStock: 46772.88, jettyStock: 19075.55, tongkang: '', barging: 0, catatan: 'Initial Stock' },
             { tanggal: '04/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2302.99, wpStock: 44469.89, jettyStock: 21378.54, tongkang: '', barging: 0, catatan: '' },
-            { tanggal: '05/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Ada', hauling: 2017.79, wpStock: 42452.10, jettyStock: 23396.33, tongkang: '', barging: 0, catatan: 'Insiden minor jalan hauling' },
+            { tanggal: '05/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Ada', hauling: 2017.79, wpStock: 42452.10, jettyStock: 23396.33, tongkang: '', barging: 0, catatan: 'DT SKP tumbang di KM 35 jalan hauling' },
+            { tanggal: '06/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2124.74, wpStock: 40327.36, jettyStock: 25521.07, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '07/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2153.26, wpStock: 38174.10, jettyStock: 27674.33, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '08/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 982.08, wpStock: 37192.02, jettyStock: 28656.41, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '09/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1765.76, wpStock: 35426.26, jettyStock: 30422.17, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '10/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1207.76, wpStock: 34218.50, jettyStock: 25286.08, tongkang: 'BG BOX SEPULUH', barging: 6343.853, catatan: 'Barging 10-11 Oktober 2026' },
+            { tanggal: '11/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2546.96, wpStock: 31671.54, jettyStock: 27833.04, tongkang: '', barging: 0, catatan: '' },
             { tanggal: '12/10/26', mining: 2653.60, umpan: 2653.60, washed: 1326.80, k3: 'Tidak', hauling: 2618.88, wpStock: 30379.46, jettyStock: 30451.92, tongkang: '', barging: 0, catatan: '' },
-            { tanggal: '16/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1116.00, wpStock: 26937.22, jettyStock: 30446.10, tongkang: 'BG FINACIA 82', barging: 6520.775, catatan: 'Barging 16-17 Okt' }
+            { tanggal: '13/10/26', mining: 4240.80, umpan: 4240.80, washed: 2120.40, k3: 'Tidak', hauling: 2137.76, wpStock: 30362.10, jettyStock: 32589.68, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '14/10/26', mining: 1904.64, umpan: 1904.64, washed: 952.32, k3: 'Tidak', hauling: 1733.52, wpStock: 29580.90, jettyStock: 34323.20, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '15/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1527.68, wpStock: 28053.22, jettyStock: 35850.88, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '16/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1116.00, wpStock: 26937.22, jettyStock: 30446.10, tongkang: 'BG FINACIA 82', barging: 6520.775, catatan: 'Barging 16-17 Oktober 2026' },
+            { tanggal: '17/10/26', mining: 3521.60, umpan: 3521.60, washed: 1760.80, k3: 'Tidak', hauling: 1902.16, wpStock: 26795.86, jettyStock: 32348.26, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '18/10/26', mining: 3596.00, umpan: 3596.00, washed: 1798.00, k3: 'Tidak', hauling: 1349.12, wpStock: 27244.74, jettyStock: 33697.38, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '19/10/26', mining: 5659.36, umpan: 5659.36, washed: 2829.68, k3: 'Tidak', hauling: 1091.20, wpStock: 28983.22, jettyStock: 34788.58, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '20/10/26', mining: 8665.12, umpan: 8665.12, washed: 4332.56, k3: 'Tidak', hauling: 0, wpStock: 33315.78, jettyStock: 34788.58, tongkang: '', barging: 0, catatan: 'Tidak ada hauling' },
+            { tanggal: '21/10/26', mining: 4761.60, umpan: 4761.60, washed: 2380.80, k3: 'Tidak', hauling: 1049.04, wpStock: 34597.94, jettyStock: 35837.62, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '22/10/26', mining: 4216.00, umpan: 4216.00, washed: 2108.00, k3: 'Tidak', hauling: 1398.72, wpStock: 35307.22, jettyStock: 37236.34, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '23/10/26', mining: 7276.32, umpan: 7276.32, washed: 3638.16, k3: 'Tidak', hauling: 1044.08, wpStock: 37901.30, jettyStock: 31442.26, tongkang: 'TK Citeurup 2 / TB Entenebe Power 2', barging: 6838.16, catatan: '' },
+            { tanggal: '24/10/26', mining: 9300.00, umpan: 9300.00, washed: 4650.00, k3: 'Tidak', hauling: 987.04, wpStock: 41564.26, jettyStock: 32429.30, tongkang: '', barging: 0, catatan: 'Hauling Stop pukul 15.55' },
+            { tanggal: '25/10/26', mining: 7132.48, umpan: 7132.48, washed: 3566.24, k3: 'Ada', hauling: 1693.84, wpStock: 43436.66, jettyStock: 27175.99, tongkang: 'Finacia 38', barging: 6947.00, catatan: 'DT SKP S15L mundur Di Tanjakan' },
+            { tanggal: '26/10/26', mining: 10629.28, umpan: 10629.28, washed: 5314.64, k3: 'Tidak', hauling: 0, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: 'Tidak ada hauling karena malam sebelumnya hujan, maintenance road' },
+            { tanggal: '27/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 746.48, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: 'Tidak ada Kegiatan penambangan' },
+            { tanggal: '28/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1698.80, wpStock: 0, jettyStock: 0, tongkang: 'BG FINACIA 70', barging: 7122.663, catatan: 'Tidak Ada mining, BBM kosong' },
+            { tanggal: '29/10/26', mining: 5187.08, umpan: 5187.08, washed: 2593.54, k3: 'Tidak', hauling: 1573.32, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: '' }
         ];
 
         let rawData = [...sampleDataset];
@@ -455,6 +477,18 @@
                     statusText.innerText = textOverride || (GOOGLE_SCRIPT_URL ? "Online" : "Offline / Local");
                 }
             }
+        }
+
+        function parseIndoNum(val) {
+            if (val === null || val === undefined || val === '') return 0;
+            if (typeof val === 'number') return val;
+            let str = val.toString().trim();
+            if (str.includes(',') && str.includes('.')) {
+                str = str.replace(/\./g, '').replace(',', '.');
+            } else if (str.includes(',')) {
+                str = str.replace(',', '.');
+            }
+            return parseFloat(str) || 0;
         }
 
         function parseToDateObj(dateStr) {
@@ -517,22 +551,28 @@
                 let current = rawData[i];
                 current.tanggal = formatToDDMMYY(current.tanggal);
 
-                let mining = parseFloat(current.mining) || 0;
-                let umpan = parseFloat(current.umpan) || (mining > 0 ? mining : 0);
-                let washed = parseFloat(current.washed) || (umpan * 0.50);
-                let hauling = parseFloat(current.hauling) || 0;
-                let barging = parseFloat(current.barging) || 0;
+                let mining = parseIndoNum(current.mining);
+                let umpan = parseIndoNum(current.umpan) || (mining > 0 ? mining : 0);
+                let washed = parseIndoNum(current.washed) || (umpan * 0.50);
+                let hauling = parseIndoNum(current.hauling);
+                let barging = parseIndoNum(current.barging);
 
+                current.mining = mining;
                 current.umpan = umpan;
                 current.washed = washed;
+                current.hauling = hauling;
+                current.barging = barging;
 
                 if (i === 0) {
-                    if (!current.wpStock || current.wpStock === 0) current.wpStock = 46772.88;
-                    if (!current.jettyStock || current.jettyStock === 0) current.jettyStock = 19075.55;
+                    if (!current.wpStock || current.wpStock === 0) current.wpStock = 44469.89;
+                    if (!current.jettyStock || current.jettyStock === 0) current.jettyStock = 21378.54;
                 } else {
                     let prev = rawData[i - 1];
-                    current.wpStock = (prev.wpStock || 0) + washed - hauling;
-                    current.jettyStock = (prev.jettyStock || 0) + hauling - barging;
+                    let calcWP = (prev.wpStock || 0) + washed - hauling;
+                    let calcJetty = (prev.jettyStock || 0) + hauling - barging;
+                    
+                    current.wpStock = parseIndoNum(current.wpStock) || calcWP;
+                    current.jettyStock = parseIndoNum(current.jettyStock) || calcJetty;
                 }
             }
         }
@@ -558,7 +598,14 @@
                 if (Array.isArray(data) && data.length > 0) {
                     rawData = data.map(item => ({
                         ...item,
-                        tanggal: formatToDDMMYY(item.tanggal)
+                        tanggal: formatToDDMMYY(item.tanggal),
+                        mining: parseIndoNum(item.mining),
+                        umpan: parseIndoNum(item.umpan),
+                        washed: parseIndoNum(item.washed),
+                        hauling: parseIndoNum(item.hauling),
+                        wpStock: parseIndoNum(item.wpStock),
+                        jettyStock: parseIndoNum(item.jettyStock),
+                        barging: parseIndoNum(item.barging)
                     }));
                 }
                 recalculateInventoryStocks();
@@ -608,8 +655,8 @@
             let sumMining = 0, sumUmpan = 0, sumWashed = 0, sumHauling = 0, sumBarging = 0, countK3 = 0;
 
             filteredData.forEach((row, index) => {
-                let m = parseFloat(row.mining) || 0, u = parseFloat(row.umpan) || 0, w = parseFloat(row.washed) || 0;
-                let h = parseFloat(row.hauling) || 0, b = parseFloat(row.barging) || 0;
+                let m = parseIndoNum(row.mining), u = parseIndoNum(row.umpan), w = parseIndoNum(row.washed);
+                let h = parseIndoNum(row.hauling), b = parseIndoNum(row.barging);
 
                 sumMining += m; sumUmpan += u; sumWashed += w; sumHauling += h; sumBarging += b;
                 if (row.k3 === 'Ada') countK3++;
@@ -626,7 +673,7 @@
                     <td class="text-right font-semibold text-teal-700">${formatNum(row.jettyStock)}</td>
                     <td class="text-center font-bold">${row.tongkang || '-'}</td>
                     <td class="text-right text-purple-700 font-bold">${b > 0 ? formatNum(b, 3) : '-'}</td>
-                    <td class="text-left truncate max-w-[120px]">${row.catatan || ''}</td>
+                    <td class="text-left truncate max-w-[120px]" title="${row.catatan || ''}">${row.catatan || ''}</td>
                     <td class="text-center no-print">
                         <button onclick="editRecord(${index})" class="text-blue-600 hover:text-blue-800 mr-1"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteRecord(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
@@ -642,7 +689,7 @@
             document.getElementById('totBarging').innerText = formatNum(sumBarging, 3);
             document.getElementById('totK3').innerText = countK3 > 0 ? `${countK3} Inc` : 'Nihil';
 
-            let lastRow = filteredData.length > 0 ? filteredData[filteredData.length - 1] : { wpStock: 46772.88, jettyStock: 19075.55 };
+            let lastRow = filteredData.length > 0 ? filteredData[filteredData.length - 1] : { wpStock: 44469.89, jettyStock: 21378.54 };
             document.getElementById('lastWPStock').innerText = formatNum(lastRow.wpStock);
             document.getElementById('lastJettyStock').innerText = formatNum(lastRow.jettyStock);
 
@@ -687,7 +734,7 @@
         }
 
         function calcNonZeroAvg(arr) {
-            let validVals = arr.filter(v => v > 0);
+            let validVals = arr.map(v => parseIndoNum(v)).filter(v => v > 0);
             if (validVals.length === 0) return 0;
             return validVals.reduce((a, b) => a + b, 0) / validVals.length;
         }
@@ -695,12 +742,12 @@
         function updateCharts() {
             let labels = filteredData.map(d => d.tanggal);
 
-            let miningVals = filteredData.map(d => d.mining);
-            let washedVals = filteredData.map(d => d.washed);
-            let haulingVals = filteredData.map(d => d.hauling);
-            let wpStockVals = filteredData.map(d => d.wpStock);
-            let jettyStockVals = filteredData.map(d => d.jettyStock);
-            let bargingVals = filteredData.map(d => d.barging);
+            let miningVals = filteredData.map(d => parseIndoNum(d.mining));
+            let washedVals = filteredData.map(d => parseIndoNum(d.washed));
+            let haulingVals = filteredData.map(d => parseIndoNum(d.hauling));
+            let wpStockVals = filteredData.map(d => parseIndoNum(d.wpStock));
+            let jettyStockVals = filteredData.map(d => parseIndoNum(d.jettyStock));
+            let bargingVals = filteredData.map(d => parseIndoNum(d.barging));
 
             let avgMining = calcNonZeroAvg(miningVals);
             let avgWashed = calcNonZeroAvg(washedVals);
@@ -723,7 +770,7 @@
                 ? `Rata-rata Barging (${bargingActiveDays.length} Hari Aktivitas): ${formatNum(avgBarging, 3)} Ton` 
                 : 'Rata-rata Barging: -';
 
-            // 1. Chart Produksi (Mining CBX & Washed + Garis Rata-rata)
+            // 1. Chart Produksi
             let prodDatasets = [
                 { type: 'bar', label: 'Mining CBX', data: miningVals, backgroundColor: '#f59e0b' },
                 { type: 'bar', label: 'Hasil Washed', data: washedVals, backgroundColor: '#10b981' }
@@ -870,15 +917,15 @@
 
                     imported.push({
                         tanggal: tgl,
-                        mining: parseFloat(row[1]) || 0,
-                        umpan: parseFloat(row[2]) || 0,
-                        washed: parseFloat(row[3]) || 0,
+                        mining: parseIndoNum(row[1]),
+                        umpan: parseIndoNum(row[2]),
+                        washed: parseIndoNum(row[3]),
                         k3: row[4] ? row[4].toString().trim() : 'Tidak',
-                        hauling: parseFloat(row[5]) || 0,
-                        wpStock: parseFloat(row[6]) || 0,
-                        jettyStock: parseFloat(row[7]) || 0,
+                        hauling: parseIndoNum(row[5]),
+                        wpStock: parseIndoNum(row[6]),
+                        jettyStock: parseIndoNum(row[7]),
                         tongkang: row[8] ? row[8].toString().trim() : '',
-                        barging: parseFloat(row[9]) || 0,
+                        barging: parseIndoNum(row[9]),
                         catatan: row[10] ? row[10].toString().trim() : ''
                     });
                 }
