@@ -385,12 +385,13 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- JavaScript Application Logic & Integration -->
     <script>
-        let SPREADSHEET_DIRECT_URL = localStorage.getItem('SKU_SPREADSHEET_URL') || "https://docs.google.com/spreadsheets/d/1_x1VVyr5b_PijzMCTsbalWLMOeNeJyPl2VIiYdhry5A/edit";
+        // URL Google Sheet Langsung & Google Apps Script
+        let SPREADSHEET_DIRECT_URL = localStorage.getItem('SKU_SPREADSHEET_URL') || "https://docs.google.com/spreadsheets/d/1_x1VVyr5b_PijzMCTsbalWLMOeNeJyPl2VIiYdhry5A/edit?usp=drive_link";
         let GOOGLE_SCRIPT_URL = localStorage.getItem('SKU_SCRIPT_URL') || "";
 
-        // Sample Dataset persis dari revisi Google Sheet Oktober 2026
+        // Dataset Bawaan Disesuaikan dengan Data Oktober 2026
         let sampleDataset = [
             { tanggal: '04/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2302.99, wpStock: 44469.89, jettyStock: 21378.54, tongkang: '', barging: 0, catatan: '' },
             { tanggal: '05/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Ada', hauling: 2017.79, wpStock: 42452.10, jettyStock: 23396.33, tongkang: '', barging: 0, catatan: 'DT SKP tumbang di KM 35 jalan hauling' },
@@ -414,10 +415,10 @@
             { tanggal: '23/10/26', mining: 7276.32, umpan: 7276.32, washed: 3638.16, k3: 'Tidak', hauling: 1044.08, wpStock: 37901.30, jettyStock: 31442.26, tongkang: 'TK Citeurup 2 / TB Entenebe Power 2', barging: 6838.16, catatan: '' },
             { tanggal: '24/10/26', mining: 9300.00, umpan: 9300.00, washed: 4650.00, k3: 'Tidak', hauling: 987.04, wpStock: 41564.26, jettyStock: 32429.30, tongkang: '', barging: 0, catatan: 'Hauling Stop pukul 15.55' },
             { tanggal: '25/10/26', mining: 7132.48, umpan: 7132.48, washed: 3566.24, k3: 'Ada', hauling: 1693.84, wpStock: 43436.66, jettyStock: 27175.99, tongkang: 'Finacia 38', barging: 6947.00, catatan: 'DT SKP S15L mundur Di Tanjakan' },
-            { tanggal: '26/10/26', mining: 10629.28, umpan: 10629.28, washed: 5314.64, k3: 'Tidak', hauling: 0, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: 'Tidak ada hauling karena malam sebelumnya hujan, maintenance road' },
-            { tanggal: '27/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 746.48, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: 'Tidak ada Kegiatan penambangan' },
-            { tanggal: '28/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1698.80, wpStock: 0, jettyStock: 0, tongkang: 'BG FINACIA 70', barging: 7122.663, catatan: 'Tidak Ada mining, BBM kosong' },
-            { tanggal: '29/10/26', mining: 5187.08, umpan: 5187.08, washed: 2593.54, k3: 'Tidak', hauling: 1573.32, wpStock: 0, jettyStock: 0, tongkang: '', barging: 0, catatan: '' }
+            { tanggal: '26/10/26', mining: 10629.28, umpan: 10629.28, washed: 5314.64, k3: 'Tidak', hauling: 0, wpStock: 48751.30, jettyStock: 27175.99, tongkang: '', barging: 0, catatan: 'Tidak ada hauling karena malam sebelumnya hujan, maintenance road' },
+            { tanggal: '27/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 746.48, wpStock: 48004.82, jettyStock: 27922.47, tongkang: '', barging: 0, catatan: 'Tidak ada Kegiatan penambangan' },
+            { tanggal: '28/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1698.80, wpStock: 46306.02, jettyStock: 22498.607, tongkang: 'BG FINACIA 70', barging: 7122.663, catatan: 'Tidak Ada mining, BBM kosong' },
+            { tanggal: '29/10/26', mining: 5187.08, umpan: 5187.08, washed: 2593.54, k3: 'Tidak', hauling: 1573.32, wpStock: 47326.24, jettyStock: 24071.927, tongkang: '', barging: 0, catatan: '' }
         ];
 
         let rawData = [...sampleDataset];
@@ -437,6 +438,7 @@
             }
         });
 
+        // Membuka Tab Baru Google Sheet
         function openGoogleSheetLink() {
             if (SPREADSHEET_DIRECT_URL) {
                 window.open(SPREADSHEET_DIRECT_URL, '_blank');
@@ -445,6 +447,7 @@
             }
         }
 
+        // Pengaturan URL Apps Script & Google Sheet
         function configScriptUrl() {
             let scriptInput = prompt("Masukkan URL Web App Google Apps Script Anda:", GOOGLE_SCRIPT_URL);
             if (scriptInput !== null) {
@@ -571,12 +574,13 @@
                     let calcWP = (prev.wpStock || 0) + washed - hauling;
                     let calcJetty = (prev.jettyStock || 0) + hauling - barging;
                     
-                    current.wpStock = parseIndoNum(current.wpStock) || calcWP;
-                    current.jettyStock = parseIndoNum(current.jettyStock) || calcJetty;
+                    current.wpStock = (current.wpStock && current.wpStock > 0) ? parseIndoNum(current.wpStock) : calcWP;
+                    current.jettyStock = (current.jettyStock && current.jettyStock > 0) ? parseIndoNum(current.jettyStock) : calcJetty;
                 }
             }
         }
 
+        // Fungsi Membuka & Sinkronisasi dengan Google Apps Script
         function fetchDataFromGoogleSheet() {
             if (!GOOGLE_SCRIPT_URL) {
                 alert("URL Google Apps Script belum diatur. Klik tombol gerigi (gear) di kanan atas untuk memasukkan URL Web App.");
@@ -591,7 +595,7 @@
                 headers: { "Content-Type": "text/plain;charset=utf-8" }
             })
             .then(res => {
-                if (!res.ok) throw new Error("Network response was not ok");
+                if (!res.ok) throw new Error("Gagal mengambil data dari Google Sheet");
                 return res.json();
             })
             .then(data => {
