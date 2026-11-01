@@ -400,7 +400,7 @@
     <script>
         const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbxfXplD2tj1_vpKxyy46V3NPForulBsuDGZqfBul312EgCcSh17gNCnpDMH4sRXNaQ/exec";
 
-        let bargingData = [
+        let defaultInitialData = [
             {
                 no_shipment: 26,
                 nama_tb_tongkang: "Mega Sukses XVIII / Box Sepuluh",
@@ -493,6 +493,7 @@
             }
         ];
 
+        let bargingData = [...defaultInitialData];
         let currentFilteredData = [];
         let draftChart = null;
         let coaChart = null;
@@ -550,7 +551,6 @@
         async function fetchFromGAS() {
             const url = getGasUrl();
             if (!url) {
-                console.log("URL Google Apps Script belum diatur.");
                 renderTable();
                 return;
             }
@@ -565,7 +565,7 @@
 
             try {
                 const res = await fetch(url);
-                if (!res.ok) throw new Error("Network response was not ok");
+                if (!res.ok) throw new Error("Gagal terhubung ke Google Apps Script");
                 const rawData = await res.json();
                 
                 if (Array.isArray(rawData) && rawData.length > 0) {
@@ -587,11 +587,10 @@
                         coa_discharge_sio2: parseNum(item.coa_discharge_sio2),
                         coa_discharge_rsio2: parseNum(item.coa_discharge_rsio2)
                     }));
-
                     if (syncText) syncText.innerText = "Synced";
                 }
             } catch (err) {
-                console.warn("Sync Google Sheet dilewati / gagal fetch (CORS/URL):", err.message);
+                console.warn("Sinkronisasi otomatis diabaikan, menggunakan data lokal:", err.message);
                 if (syncText) syncText.innerText = "Local Mode";
             } finally {
                 renderTable();
@@ -599,7 +598,7 @@
                 if (syncIcon) syncIcon.classList.remove('fa-spin');
                 setTimeout(() => {
                     if (syncText) syncText.innerText = "Sync Sheet";
-                }, 3000);
+                }, 2500);
             }
         }
 
@@ -970,7 +969,7 @@
             });
         }
 
-        // Auto Sync otomatis setiap kali halaman dibuka atau di-refresh
+        // Render tabel dengan data lokal terlebih dahulu, lalu coba ambil update dari Google Sheet
         window.onload = function() {
             renderTable();
             fetchFromGAS();
