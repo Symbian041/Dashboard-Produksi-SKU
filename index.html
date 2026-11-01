@@ -141,7 +141,7 @@
                 </div>
 
                 <div class="text-xs text-slate-600 bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5">
-                    <i class="fa-solid fa-circle-info mr-1"></i> Stock Awal (09/09/26): <strong>WP: 46.772,88 Ton</strong> | <strong>Jetty: 19.075,55 Ton</strong>
+                    <i class="fa-solid fa-circle-info mr-1"></i> Stock Awal Bulan Oktober diambil dari Laporan Stock Opname oleh Sucofindo Tanggal 9 september 2026: <strong>WP: 46.772,88 Ton</strong> | <strong>Jetty: 19.075,55 Ton</strong>
                 </div>
             </div>
         </div>
@@ -385,13 +385,11 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Logic & Integration -->
+    <!-- JavaScript Application Logic -->
     <script>
-        // URL Google Sheet Langsung & Google Apps Script
         let SPREADSHEET_DIRECT_URL = localStorage.getItem('SKU_SPREADSHEET_URL') || "https://docs.google.com/spreadsheets/d/1_x1VVyr5b_PijzMCTsbalWLMOeNeJyPl2VIiYdhry5A/edit?usp=drive_link";
         let GOOGLE_SCRIPT_URL = localStorage.getItem('SKU_SCRIPT_URL') || "";
 
-        // Dataset Bawaan Disesuaikan dengan Data Oktober 2026
         let sampleDataset = [
             { tanggal: '04/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 2302.99, wpStock: 44469.89, jettyStock: 21378.54, tongkang: '', barging: 0, catatan: '' },
             { tanggal: '05/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Ada', hauling: 2017.79, wpStock: 42452.10, jettyStock: 23396.33, tongkang: '', barging: 0, catatan: 'DT SKP tumbang di KM 35 jalan hauling' },
@@ -410,15 +408,17 @@
             { tanggal: '18/10/26', mining: 3596.00, umpan: 3596.00, washed: 1798.00, k3: 'Tidak', hauling: 1349.12, wpStock: 27244.74, jettyStock: 33697.38, tongkang: '', barging: 0, catatan: '' },
             { tanggal: '19/10/26', mining: 5659.36, umpan: 5659.36, washed: 2829.68, k3: 'Tidak', hauling: 1091.20, wpStock: 28983.22, jettyStock: 34788.58, tongkang: '', barging: 0, catatan: '' },
             { tanggal: '20/10/26', mining: 8665.12, umpan: 8665.12, washed: 4332.56, k3: 'Tidak', hauling: 0, wpStock: 33315.78, jettyStock: 34788.58, tongkang: '', barging: 0, catatan: 'Tidak ada hauling' },
-            { tanggal: '21/10/26', mining: 4761.60, umpan: 4761.60, washed: 2380.80, k3: 'Tidak', hauling: 1049.04, wpStock: 34597.94, jettyStock: 35837.62, tongkang: '', barging: 0, catatan: '' },
-            { tanggal: '22/10/26', mining: 4216.00, umpan: 4216.00, washed: 2108.00, k3: 'Tidak', hauling: 1398.72, wpStock: 35307.22, jettyStock: 37236.34, tongkang: '', barging: 0, catatan: '' },
-            { tanggal: '23/10/26', mining: 7276.32, umpan: 7276.32, washed: 3638.16, k3: 'Tidak', hauling: 1044.08, wpStock: 37901.30, jettyStock: 31442.26, tongkang: 'TK Citeurup 2 / TB Entenebe Power 2', barging: 6838.16, catatan: '' },
-            { tanggal: '24/10/26', mining: 9300.00, umpan: 9300.00, washed: 4650.00, k3: 'Tidak', hauling: 987.04, wpStock: 41564.26, jettyStock: 32429.30, tongkang: '', barging: 0, catatan: 'Hauling Stop pukul 15.55' },
-            { tanggal: '25/10/26', mining: 7132.48, umpan: 7132.48, washed: 3566.24, k3: 'Ada', hauling: 1693.84, wpStock: 43436.66, jettyStock: 27175.99, tongkang: 'Finacia 38', barging: 6947.00, catatan: 'DT SKP S15L mundur Di Tanjakan' },
-            { tanggal: '26/10/26', mining: 10629.28, umpan: 10629.28, washed: 5314.64, k3: 'Tidak', hauling: 0, wpStock: 48751.30, jettyStock: 27175.99, tongkang: '', barging: 0, catatan: 'Tidak ada hauling karena malam sebelumnya hujan, maintenance road' },
-            { tanggal: '27/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 746.48, wpStock: 48004.82, jettyStock: 27922.47, tongkang: '', barging: 0, catatan: 'Tidak ada Kegiatan penambangan' },
-            { tanggal: '28/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 1698.80, wpStock: 46306.02, jettyStock: 22498.607, tongkang: 'BG FINACIA 70', barging: 7122.663, catatan: 'Tidak Ada mining, BBM kosong' },
-            { tanggal: '29/10/26', mining: 5187.08, umpan: 5187.08, washed: 2593.54, k3: 'Tidak', hauling: 1573.32, wpStock: 47326.24, jettyStock: 24071.927, tongkang: '', barging: 0, catatan: '' }
+            { tanggal: '21/10/26', mining: 4761.60, umpan: 4761.60, washed: 2380.80, k3: 'Tidak', hauling: 1049.04, wpStock: 34647.54, jettyStock: 35837.62, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '22/10/26', mining: 4216.00, umpan: 4216.00, washed: 2108.00, k3: 'Tidak', hauling: 1398.72, wpStock: 35356.82, jettyStock: 37236.34, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '23/10/26', mining: 5229.86, umpan: 5229.86, washed: 2614.93, k3: 'Tidak', hauling: 1044.08, wpStock: 36927.67, jettyStock: 31442.26, tongkang: 'TK Citeurup 2 / TB Entenebe Power 2', barging: 6838.16, catatan: '' },
+            { tanggal: '24/10/26', mining: 6684.38, umpan: 6684.38, washed: 3342.19, k3: 'Tidak', hauling: 987.04, wpStock: 39282.82, jettyStock: 32429.30, tongkang: '', barging: 0, catatan: 'Hauling Stop pukul 15.55' },
+            { tanggal: '25/10/26', mining: 5176.38, umpan: 5176.38, washed: 2588.19, k3: 'Ada', hauling: 1718.64, wpStock: 40152.37, jettyStock: 27200.80, tongkang: 'Finacia 38', barging: 6947.00, catatan: 'DT SKP S15L mundur Di Tanjakan' },
+            { tanggal: '26/10/26', mining: 7639.80, umpan: 7639.80, washed: 3819.90, k3: 'Tidak', hauling: 0, wpStock: 43972.27, jettyStock: 27200.80, tongkang: '', barging: 0, catatan: 'Tidak ada hauling karena malam sebelumnya hujan, maintenance road' },
+            { tanggal: '27/10/26', mining: 0, umpan: 0, washed: 0, k3: 'Tidak', hauling: 746.48, wpStock: 43225.79, jettyStock: 27947.28, tongkang: '', barging: 0, catatan: 'Tidak ada Kegiatan penambangan' },
+            { tanggal: '28/10/26', mining: 1967.88, umpan: 1967.88, washed: 983.94, k3: 'Tidak', hauling: 1698.80, wpStock: 42510.93, jettyStock: 22523.41, tongkang: 'BG FINACIA 70', barging: 7122.663, catatan: 'Tidak Ada mining, BBM kosong' },
+            { tanggal: '29/10/26', mining: 5187.08, umpan: 5187.08, washed: 2593.54, k3: 'Tidak', hauling: 1572.32, wpStock: 43532.15, jettyStock: 24095.73, tongkang: '', barging: 0, catatan: '' },
+            { tanggal: '30/10/26', mining: 8185.24, umpan: 8185.24, washed: 4092.62, k3: 'Tidak', hauling: 2204.72, wpStock: 45420.05, jettyStock: 19167.76, tongkang: 'BG Manna Lines 9003/TB Mega Sukses X', barging: 7132.694, catatan: '' },
+            { tanggal: '31/10/26', mining: 5657.66, umpan: 5657.66, washed: 2828.83, k3: 'Tidak', hauling: 1940.91, wpStock: 46307.97, jettyStock: 21108.67, tongkang: '', barging: 0, catatan: '' }
         ];
 
         let rawData = [...sampleDataset];
@@ -438,7 +438,6 @@
             }
         });
 
-        // Membuka Tab Baru Google Sheet
         function openGoogleSheetLink() {
             if (SPREADSHEET_DIRECT_URL) {
                 window.open(SPREADSHEET_DIRECT_URL, '_blank');
@@ -447,7 +446,6 @@
             }
         }
 
-        // Pengaturan URL Apps Script & Google Sheet
         function configScriptUrl() {
             let scriptInput = prompt("Masukkan URL Web App Google Apps Script Anda:", GOOGLE_SCRIPT_URL);
             if (scriptInput !== null) {
@@ -497,15 +495,24 @@
         function parseToDateObj(dateStr) {
             if (!dateStr) return new Date(0);
             let str = dateStr.toString().trim();
+            if (str.includes('T')) str = str.split('T')[0];
+            
             if (str.includes('/')) {
                 let p = str.split('/');
                 if (p.length === 3) {
-                    let yr = p[2].length === 2 ? '20' + p[2] : p[2];
-                    return new Date(yr, p[1] - 1, p[0]);
+                    let day = parseInt(p[0], 10);
+                    let month = parseInt(p[1], 10) - 1;
+                    let yr = p[2].length === 2 ? parseInt('20' + p[2], 10) : parseInt(p[2], 10);
+                    return new Date(yr, month, day);
                 }
             } else if (str.includes('-')) {
                 let p = str.split('-');
-                if (p.length === 3) return new Date(p[0], p[1] - 1, p[2]);
+                if (p.length === 3) {
+                    let yr = parseInt(p[0], 10);
+                    let month = parseInt(p[1], 10) - 1;
+                    let day = parseInt(p[2], 10);
+                    return new Date(yr, month, day);
+                }
             }
             return new Date(str);
         }
@@ -514,6 +521,7 @@
             if (!dateInput) return '';
             if (typeof dateInput === 'string') {
                 var str = dateInput.trim();
+                if (str.includes('T')) str = str.split('T')[0];
                 if (str.includes('/')) {
                     var parts = str.split('/');
                     if (parts.length === 3) {
@@ -522,7 +530,7 @@
                     }
                 }
                 if (str.includes('-')) {
-                    var p = str.split('T')[0].split('-');
+                    var p = str.split('-');
                     if (p.length === 3) return `${p[2].padStart(2, '0')}/${p[1].padStart(2, '0')}/${p[0].slice(-2)}`;
                 }
             }
@@ -537,6 +545,7 @@
         function formatToYYYYMMDD(dateStr) {
             if (!dateStr) return '';
             var str = dateStr.toString().trim();
+            if (str.includes('T')) str = str.split('T')[0];
             if (str.includes('/')) {
                 var p = str.split('/');
                 if (p.length === 3) {
@@ -580,10 +589,9 @@
             }
         }
 
-        // Fungsi Membuka & Sinkronisasi dengan Google Apps Script
         function fetchDataFromGoogleSheet() {
             if (!GOOGLE_SCRIPT_URL) {
-                alert("URL Google Apps Script belum diatur. Klik tombol gerigi (gear) di kanan atas untuk memasukkan URL Web App.");
+                showSyncStatus(false, "Offline / Local");
                 return;
             }
             
@@ -726,13 +734,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    }
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { x: { display: false }, y: { display: false } }
                 } 
             });
         }
@@ -782,25 +785,15 @@
 
             if (avgMining > 0) {
                 prodDatasets.push({
-                    type: 'line',
-                    label: 'Rata2 Mining',
-                    data: Array(labels.length).fill(avgMining),
-                    borderColor: '#d97706',
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    fill: false
+                    type: 'line', label: 'Rata2 Mining', data: Array(labels.length).fill(avgMining),
+                    borderColor: '#d97706', borderDash: [5, 5], pointRadius: 0, fill: false
                 });
             }
 
             if (avgWashed > 0) {
                 prodDatasets.push({
-                    type: 'line',
-                    label: 'Rata2 Washed',
-                    data: Array(labels.length).fill(avgWashed),
-                    borderColor: '#047857',
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    fill: false
+                    type: 'line', label: 'Rata2 Washed', data: Array(labels.length).fill(avgWashed),
+                    borderColor: '#047857', borderDash: [5, 5], pointRadius: 0, fill: false
                 });
             }
 
@@ -849,7 +842,7 @@
             bargingChartInstance.data = { labels: labels, datasets: bargingDatasets };
             bargingChartInstance.update();
 
-            // 5. Chart K3 & Notasi Bawah
+            // 5. Chart K3
             let inc = filteredData.filter(d => d.k3 === 'Ada').length;
             let safe = filteredData.length - inc;
             let safeRatio = filteredData.length > 0 ? Math.round((safe / filteredData.length) * 100) : 100;
