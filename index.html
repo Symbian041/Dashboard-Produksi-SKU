@@ -48,10 +48,13 @@
 
                 <!-- Action Toolbar Buttons -->
                 <div class="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 mobile-scroll shrink-0">
-                    <label class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium px-2.5 sm:px-3 py-1.5 sm:py-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-                        <i class="fa-solid fa-file-excel"></i> Upload Excel
-                        <input type="file" id="excelUploadInput" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload(event)" class="hidden">
-                    </label>
+                    <button id="syncBtn" onclick="fetchFromGAS()" class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-medium px-2.5 sm:px-3 py-1.5 sm:py-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                        <i id="syncIcon" class="fa-solid fa-rotate"></i> <span id="syncText">Sync Sheet</span>
+                    </button>
+
+                    <a href="https://docs.google.com/spreadsheets/d/1aPzvyYkxn_eP4X9cDPtnAcNW7P7fdE3RlGememMX7PA/edit" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-2.5 sm:px-3 py-1.5 sm:py-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                        <i class="fa-solid fa-file-excel"></i> Buka Sheet
+                    </a>
 
                     <button onclick="exportExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium px-2.5 sm:px-3 py-1.5 sm:py-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                         <i class="fa-solid fa-file-export"></i> Export Excel
@@ -395,13 +398,37 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Mengosongkan data awal agar benar-benar bergantung pada file Excel atau Sinkronisasi Sheet
-        let defaultInitialData = [];
+        // URL Web App Google Apps Script yang terhubung langsung ke spreadsheet Anda
+        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbxfXplD2tj1_vpKxyy46V3NPForulBsuDGZqfBul312EgCcSh17gNCnpDMH4sRXNaQ/exec";
 
-        let bargingData = [...defaultInitialData];
+        let bargingData = [];
         let currentFilteredData = [];
         let draftChart = null;
         let coaChart = null;
+
+        function getGasUrl() {
+            return localStorage.getItem('gasUrl') || DEFAULT_GAS_URL;
+        }
+
+        function openGasModal() {
+            document.getElementById('gasUrlInput').value = getGasUrl();
+            document.getElementById('gasModal').classList.remove('hidden');
+            document.getElementById('gasModal').classList.add('flex');
+        }
+
+        function closeGasModal() {
+            document.getElementById('gasModal').classList.add('hidden');
+            document.getElementById('gasModal').classList.remove('flex');
+        }
+
+        function saveGasUrl() {
+            const url = document.getElementById('gasUrlInput').value.trim();
+            if (url) {
+                localStorage.setItem('gasUrl', url);
+            }
+            closeGasModal();
+            fetchFromGAS();
+        }
 
         function parseNum(val) {
             if (val === null || val === undefined || val === "" || val === "-") return 0;
@@ -429,71 +456,56 @@
             return timeStr ? `${formattedDate} ${timeStr}` : formattedDate;
         }
 
-        // Handler untuk membaca file Microsoft Excel (.xlsx/.xls) lokal
-        function handleExcelUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // Fungsi Sinkronisasi Data dari Google Apps Script / Google Sheet
+        async function fetchFromGAS() {
+            const url = getGasUrl();
+            if (!url) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            const syncBtn = document.getElementById('syncBtn');
+            const syncIcon = document.getElementById('syncIcon');
+            const syncText = document.getElementById('syncText');
 
-                    // Mulai dari baris index 2 (baris ke-3 Excel setelah header)
-                    let parsedList = [];
-                    for (let i = 2; i < jsonRows.length; i++) {
-                        const row = jsonRows[i];
-                        if (!row || (!row[0] && !row[1])) continue;
+            if (syncBtn) syncBtn.disabled = true;
+            if (syncIcon) syncIcon.classList.add('fa-spin');
+            if (syncText) syncText.innerText = "Syncing...";
 
-                        parsedList.push({
-                            no_shipment: parseNum(row[0]),
-                            nama_tb_tongkang: row[1] || "",
-                            kapasitas: parseNum(row[2]) || 300,
-                            tambat_tali_tgl: row[3] ? row[3].toString().split('T')[0] : "",
-                            tambat_tali_jam: row[4] ? row[4].toString() : "",
-                            draft_inisial: parseNum(row[5]),
-                            draft_inter: parseNum(row[6]),
-                            draft_final: parseNum(row[7]),
-                            ritase_dt: parseNum(row[8]),
-                            param_max_al2o3: parseNum(row[9]) || 46,
-                            param_max_sio2: parseNum(row[10]) || 15,
-                            param_max_rsio2: parseNum(row[11]) || 5,
-                            coa_barging_al2o3: parseNum(row[12]),
-                            coa_barging_sio2: parseNum(row[13]),
-                            coa_barging_rsio2: parseNum(row[14]),
-                            loading_start_tgl: row[15] ? row[15].toString().split('T')[0] : "",
-                            loading_start_jam: row[16] ? row[16].toString() : "",
-                            loading_finish_tgl: row[17] ? row[17].toString().split('T')[0] : "",
-                            loading_finish_jam: row[18] ? row[18].toString() : "",
-                            waktu_loading_total: row[19] ? row[19].toString() : "",
-                            lepas_tali_tgl: row[20] ? row[20].toString().split('T')[0] : "",
-                            lepas_tali_jam: row[21] ? row[21].toString() : "",
-                            keberangkatan_tgl: row[22] ? row[22].toString().split('T')[0] : "",
-                            keberangkatan_jam: row[23] ? row[23].toString() : "",
-                            tujuan: row[24] || "BAP SMELTER",
-                            coa_discharge_al2o3: parseNum(row[29]),
-                            coa_discharge_sio2: parseNum(row[30]),
-                            coa_discharge_rsio2: parseNum(row[31])
-                        });
-                    }
+            try {
+                const res = await fetch(url);
+                const rawData = await res.json();
+                
+                if (Array.isArray(rawData) && rawData.length > 0) {
+                    bargingData = rawData.map(item => ({
+                        ...item,
+                        no_shipment: parseNum(item.no_shipment),
+                        kapasitas: parseNum(item.kapasitas) || 300,
+                        draft_inisial: parseNum(item.draft_inisial),
+                        draft_inter: parseNum(item.draft_inter),
+                        draft_final: parseNum(item.draft_final),
+                        ritase_dt: parseNum(item.ritase_dt),
+                        param_max_al2o3: parseNum(item.param_max_al2o3) || 46,
+                        param_max_sio2: parseNum(item.param_max_sio2) || 15,
+                        param_max_rsio2: parseNum(item.param_max_rsio2) || 5,
+                        coa_barging_al2o3: parseNum(item.coa_barging_al2o3),
+                        coa_barging_sio2: parseNum(item.coa_barging_sio2),
+                        coa_barging_rsio2: parseNum(item.coa_barging_rsio2),
+                        coa_discharge_al2o3: parseNum(item.coa_discharge_al2o3),
+                        coa_discharge_sio2: parseNum(item.coa_discharge_sio2),
+                        coa_discharge_rsio2: parseNum(item.coa_discharge_rsio2)
+                    }));
 
-                    if (parsedList.length > 0) {
-                        bargingData = parsedList;
-                        renderTable();
-                        alert("Berhasil memuat file Excel!");
-                    } else {
-                        alert("Format baris data Excel tidak dikenali.");
-                    }
-                } catch (err) {
-                    console.error("Gagal membaca Excel:", err);
-                    alert("Gagal membaca file Excel. Pastikan format kolom sesuai.");
+                    renderTable();
+                    if (syncText) syncText.innerText = "Synced";
                 }
-            };
-            reader.readAsArrayBuffer(file);
+            } catch (err) {
+                console.error("Sync Google Sheet gagal:", err);
+                if (syncText) syncText.innerText = "Sync Fail";
+            } finally {
+                if (syncBtn) syncBtn.disabled = false;
+                if (syncIcon) syncIcon.classList.remove('fa-spin');
+                setTimeout(() => {
+                    if (syncText) syncText.innerText = "Sync Sheet";
+                }, 2000);
+            }
         }
 
         function setPresetPeriod(preset) {
@@ -863,8 +875,9 @@
             });
         }
 
+        // Auto Sync otomatis setiap kali halaman dibuka atau direfresh
         window.onload = function() {
-            renderTable();
+            fetchFromGAS();
         };
     </script>
 </body>
