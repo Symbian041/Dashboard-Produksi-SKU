@@ -70,10 +70,6 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-2">
-                <button onclick="openGoogleSheetLink()" class="bg-emerald-800 hover:bg-emerald-700 text-emerald-200 text-xs px-3 py-2 border border-emerald-600 transition flex items-center gap-1.5 font-bold shadow-sm" title="Buka Spreadsheet di Tab Baru">
-                    <i class="fa-solid fa-file-csv text-emerald-400 text-sm"></i> Buka Google Sheet
-                </button>
-
                 <button onclick="fetchDataFromGoogleSheet()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-2 border border-amber-500 transition flex items-center gap-1.5 font-bold shadow-sm">
                     <i class="fa-solid fa-rotate mr-1"></i> Sync Data
                 </button>
@@ -443,14 +439,6 @@
             }
         });
 
-        function openGoogleSheetLink() {
-            if (SPREADSHEET_DIRECT_URL) {
-                window.open(SPREADSHEET_DIRECT_URL, '_blank');
-            } else {
-                alert("URL Google Sheet belum dikonfigurasi.");
-            }
-        }
-
         function configScriptUrl() {
             let scriptInput = prompt("Masukkan URL Web App Google Apps Script Anda:", GOOGLE_SCRIPT_URL);
             if (scriptInput !== null) {
@@ -522,6 +510,14 @@
             return new Date(str);
         }
 
+        function getLocalTodayISO() {
+            const now = new Date();
+            const yr = now.getFullYear();
+            const mo = String(now.getMonth() + 1).padStart(2, '0');
+            const da = String(now.getDate()).padStart(2, '0');
+            return `${yr}-${mo}-${da}`;
+        }
+
         function formatToDDMMYY(dateInput) {
             if (!dateInput) return '';
             if (typeof dateInput === 'string') {
@@ -536,14 +532,21 @@
                 }
                 if (str.includes('-')) {
                     var p = str.split('-');
-                    if (p.length === 3) return `${p[2].padStart(2, '0')}/${p[1].padStart(2, '0')}/${p[0].slice(-2)}`;
+                    if (p.length === 3) {
+                        if (p[0].length === 4) {
+                            return `${p[2].padStart(2, '0')}/${p[1].padStart(2, '0')}/${p[0].slice(-2)}`;
+                        }
+                        var yrDash = p[2].length === 4 ? p[2].slice(-2) : p[2];
+                        return `${p[0].padStart(2, '0')}/${p[1].padStart(2, '0')}/${yrDash}`;
+                    }
                 }
             }
-            var d = new Date(dateInput);
-            if (isNaN(d.getTime())) return dateInput;
-            var day = String(d.getDate()).padStart(2, '0');
-            var month = String(d.getMonth() + 1).padStart(2, '0');
-            var year = String(d.getFullYear()).slice(-2);
+            var d = (dateInput instanceof Date) ? dateInput : new Date(dateInput);
+            if (isNaN(d.getTime())) return String(dateInput);
+            var useUTC = (dateInput instanceof Date) && d.getUTCHours() === 0 && d.getUTCMinutes() === 0 && d.getUTCSeconds() === 0 && d.getUTCMilliseconds() === 0;
+            var day = String(useUTC ? d.getUTCDate() : d.getDate()).padStart(2, '0');
+            var month = String((useUTC ? d.getUTCMonth() : d.getMonth()) + 1).padStart(2, '0');
+            var year = String(useUTC ? d.getUTCFullYear() : d.getFullYear()).slice(-2);
             return `${day}/${month}/${year}`;
         }
 
@@ -556,6 +559,13 @@
                 if (p.length === 3) {
                     var yr = p[2].length === 2 ? '20' + p[2] : p[2];
                     return `${yr}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}`;
+                }
+            }
+            if (str.includes('-')) {
+                var dParts = str.split('-');
+                if (dParts.length === 3 && dParts[0].length !== 4) {
+                    var yrD = dParts[2].length === 2 ? '20' + dParts[2] : dParts[2];
+                    return `${yrD}-${dParts[1].padStart(2, '0')}-${dParts[0].padStart(2, '0')}`;
                 }
             }
             return str;
@@ -652,8 +662,32 @@
                 return matchMonth && matchRange;
             });
 
+            updatePrintPeriodLabel(monthVal, startVal, endVal);
             renderTable();
             updateCharts();
+        }
+
+        function updatePrintPeriodLabel(monthVal, startVal, endVal) {
+            const el = document.getElementById('printPeriodText');
+            if (!el) return;
+            if (monthVal) {
+                const [y, m] = monthVal.split('-');
+                const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const mLabel = monthNames[parseInt(m, 10) - 1] || m;
+                el.innerText = `Periode: ${mLabel} ${y}`;
+                return;
+            }
+            if (startVal || endVal) {
+                const sTxt = startVal ? formatToDDMMYY(startVal) : 'Awal';
+                const eTxt = endVal ? formatToDDMMYY(endVal) : 'Akhir';
+                el.innerText = `Periode: ${sTxt} s/d ${eTxt}`;
+                return;
+            }
+            if (filteredData.length > 0) {
+                el.innerText = `Periode: ${filteredData[0].tanggal} s/d ${filteredData[filteredData.length - 1].tanggal}`;
+            } else {
+                el.innerText = 'Periode: Keseluruhan';
+            }
         }
 
         function resetFilters() {
@@ -878,7 +912,7 @@
                 ignoreElements: (element) => element.classList.contains('no-print')
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Dashboard_Produksi_SKU_Labai_${new Date().toISOString().split('T')[0]}.png`;
+                link.download = `Dashboard_Produksi_SKU_Labai_${getLocalTodayISO()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
@@ -966,7 +1000,7 @@
             const ws = XLSX.utils.aoa_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Input Harian");
-            XLSX.writeFile(wb, `Laporan_Produksi_SKU_Labai_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(wb, `Laporan_Produksi_SKU_Labai_${getLocalTodayISO()}.xlsx`);
         }
 
         function autoCalcWashed() {
@@ -981,7 +1015,7 @@
             document.getElementById('editIndex').value = "-1";
             document.getElementById('modalTitle').innerText = "Tambah Data Laporan Harian";
             document.getElementById('recordForm').reset();
-            document.getElementById('inputTanggal').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputTanggal').value = getLocalTodayISO();
             document.getElementById('dataModal').classList.remove('hidden');
         }
 
